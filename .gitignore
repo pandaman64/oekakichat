@@ -1,0 +1,11 @@
+.dub
+docs.json
+__dummy.html
+*.o
+*.obj
+*.dll
+*.exe*
+public_/
+*.js*
+public/bin/
+public/obj/
