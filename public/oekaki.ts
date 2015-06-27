@@ -1,4 +1,6 @@
-﻿class BaseField {
+﻿/// <reference path="custom_strokes.ts">
+
+class BaseField {
     mousedown = false;
     brush_history: Stroke[] = new Array();
     working_stroke: Stroke = null;
@@ -52,7 +54,6 @@
             
             var stroke: Stroke = { path:new Motion<Point>(stroke_tmp.path.values_) , brush: new Pen(pen_data.color, pen_data.size) };
             this.brush_history.push(stroke);
-
             this.clearField();
             this.draw();
         };
@@ -115,113 +116,11 @@ function random_color(): string {
     return "rgb(" + mixedrgb.join(",") + ")";
 }
 
-interface Point {
-    x: number;
-    y: number;
-}
-
-class Motion<T>{
-    constructor(public values_:T[] = new Array<T>()) {
-    }
-
-    //access
-    front(): T {
-        return this.values_[0];
-    }
-    forEach(callback: (v:T, i:number) => void): void{
-        this.values_.forEach(
-            (val, index, array) => {
-                callback(val, index);
-            });
-    }
-
-    //length
-    length(): number {
-        return this.values_.length;
-    }
-    empty(): boolean {
-        return this.length() === 0;
-    }
-
-    //modify
-    push(v: T): void {
-        if (this.empty() || this.values_[this.values_.length - 1] !== v) {
-            this.values_.push(v);
-        }
-    }
-    pop(): void {
-        this.values_.shift();
-    }
-    clear(): void {
-        this.values_ = new Array<T>();
-    }
-}
-
-class DrawOption {
-}
-
-interface Brush {
-    draw(ctx: CanvasRenderingContext2D, path: Motion<Point>, args?: DrawOption): void;
-    type: string;
-}
-
-class Stroke {
-    public path: Motion<Point>;
-    constructor(public brush: Brush) {
-        this.path = new Motion<Point>();
-    }
-}
-
-class Pen implements Brush {
-    type = "Pen";
-    constructor(public color: String,public size:number) { }
-
-    draw(ctx: CanvasRenderingContext2D, path: Motion<Point>): void {
-        if (path.empty()) {
-            return;
-        }
-        ctx.beginPath();
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = this.size;
-        ctx.moveTo(path.front().x, path.front().y);
-        path.forEach(
-            (v, i) => {
-                ctx.lineTo(v.x, v.y);
-            });
-        ctx.stroke();
-    }
-}
-
-class BreakLineCircle implements Brush {
-    type = "BreakLineCircle";
-    constructor(public color: String, public size: number) { }
-
-    draw(ctx: CanvasRenderingContext2D, path: Motion<Point>): void {
-        path.forEach((v, i) => this.drawArc(ctx,v));
-    }
-
-    drawArc(ctx: CanvasRenderingContext2D, pt: Point) {
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = this.color;
-        for (var i = 0; i < 12; i++) {
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, this.size, 2 * i * Math.PI / 12, (2 * i + 1) * Math.PI / 12);
-            ctx.stroke();
-        }
-    }
-}
-
 window.onload = () => {
     var base_field = new BaseField(<HTMLCanvasElement> document.getElementById("base_field"));
     (<HTMLButtonElement> document.getElementById("clear_button")).onclick = (ev) => {
         base_field.clearHistory();
         base_field.clearField();
     };
-
-    var brush = new BreakLineCircle("#000000", this.brush_size);
-    var ctx = base_field.base_field.getContext("2d");
-    var p = new Motion<Point>();
-    p.push({ x: 50, y: 50 });
-    brush.draw(ctx, p);
 };
 
