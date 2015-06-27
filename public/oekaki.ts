@@ -1,7 +1,7 @@
 ﻿class BaseField {
     mousedown = false;
     brush_history: Stroke[] = new Array();
-    working_stroke: Stroke;
+    working_stroke: Stroke = null;
     brush_size = 10;
     sock = new WebSocket("ws://127.0.0.1:8080/ws/chat");
     color = random_color();
@@ -76,7 +76,9 @@
                 ctx.stroke();*/
                 val.brush.draw(ctx, val.path);
             });
-        this.working_stroke.brush.draw(ctx, this.working_stroke.path);
+        if (this.working_stroke !== null) {
+            this.working_stroke.brush.draw(ctx, this.working_stroke.path);
+        }
     }
 
     clearField(): void {
@@ -86,6 +88,7 @@
     
     clearHistory(): void {
         this.brush_history = new Array();
+        this.working_stroke = null;
     }
 
     undo(): void {
