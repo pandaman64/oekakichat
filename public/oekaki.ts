@@ -8,10 +8,18 @@
 
     constructor(public base_field: HTMLCanvasElement) {
         this.base_field.onmousedown = ev => {
+            //ignore if not left button
+            if (ev.button != 0) {
+                return;
+            }
             this.mousedown = true;
             this.working_stroke = new Stroke(new Pen(this.color, this.brush_size));
         }
         this.base_field.onmouseup = ev => {
+            //ignore if not left button
+            if (ev.button != 0) {
+                return;
+            }
             this.mousedown = false;
             this.sock.send(JSON.stringify(flatten(this.working_stroke)));
             //this.draw();
