@@ -161,7 +161,8 @@ class DrawOption {
 }
 
 interface Brush {
-    draw(ctx: CanvasRenderingContext2D, path:Motion<Point>, args?: DrawOption): void;
+    draw(ctx: CanvasRenderingContext2D, path: Motion<Point>, args?: DrawOption): void;
+    type: string;
 }
 
 class Stroke {
@@ -172,6 +173,7 @@ class Stroke {
 }
 
 class Pen implements Brush {
+    type = "Pen";
     constructor(public color: String,public size:number) { }
 
     draw(ctx: CanvasRenderingContext2D, path: Motion<Point>): void {
@@ -191,6 +193,7 @@ class Pen implements Brush {
 }
 
 class BreakLineCircle implements Brush {
+    type = "BreakLineCircle";
     constructor(public color: String, public size: number) { }
 
     draw(ctx: CanvasRenderingContext2D, path: Motion<Point>): void {
