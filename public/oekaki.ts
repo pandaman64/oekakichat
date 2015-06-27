@@ -1,6 +1,7 @@
 ﻿class BaseField {
     mousedown = false;
     brush_history: Stroke[] = new Array();
+    working_stroke: Stroke;
     brush_size = 10;
     sock = new WebSocket("ws://127.0.0.1:8080/ws/chat");
     color = random_color();
@@ -8,17 +9,17 @@
     constructor(public base_field: HTMLCanvasElement) {
         this.base_field.onmousedown = ev => {
             this.mousedown = true;
-            this.brush_history.push(new Stroke(new Pen(this.color, this.brush_size)));
+            this.working_stroke = new Stroke(new Pen(this.color, this.brush_size));
         }
         this.base_field.onmouseup = ev => {
             this.mousedown = false;
-            this.sock.send(JSON.stringify(flatten(this.brush_history[this.brush_history.length - 1])));
+            this.sock.send(JSON.stringify(flatten(this.working_stroke)));
             //this.draw();
         }
         this.base_field.onmousemove = ev => {
             var val = this.getMouseRelativePosition(ev);
             if (this.mousedown) {
-                this.brush_history[this.brush_history.length - 1].path.push(val);
+                this.working_stroke.path.push(val);
             }
 
             this.clearField();
@@ -67,6 +68,7 @@
                 ctx.stroke();*/
                 val.brush.draw(ctx, val.path);
             });
+        this.working_stroke.brush.draw(ctx, this.working_stroke.path);
     }
 
     clearField(): void {
