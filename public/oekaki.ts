@@ -69,10 +69,6 @@ class BaseField {
         var ctx = this.base_field.getContext("2d");
         this.brush_history.forEach(
             (val, index, arr) => {
-                /*ctx.beginPath();
-                ctx.moveTo(val.front().x, val.front().y);
-                val.forEach((v, i) => ctx.lineTo(v.x, v.y));
-                ctx.stroke();*/
                 val.brush.draw(ctx, val.path);
             });
         if (this.working_stroke !== null) {
