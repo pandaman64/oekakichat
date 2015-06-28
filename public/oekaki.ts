@@ -49,10 +49,8 @@ class BaseField {
         };
         this.sock.onmessage = ev => {
             console.log(ev);
-            var stroke_tmp: Stroke = JSON.parse(ev.data);
-            var pen_data = <Pen> stroke_tmp.brush;
-            
-            var stroke: Stroke = { path:new Motion<Point>(stroke_tmp.path.values_) , brush: new Pen(pen_data.color, pen_data.size) };
+            var stroke_data = <Stroke> JSON.parse(ev.data);
+            var stroke: Stroke = { path: fill_property(new Motion<Point>(),stroke_data.path) , brush: fill_property(new Pen("", 0), stroke_data.brush) };
             this.brush_history.push(stroke);
             this.clearField();
             this.draw();
@@ -105,6 +103,12 @@ function flatten(val: any): any {
         result[key] = result[key];
     }
     return result;
+}
+function fill_property<T>(empty: T, data: any): T {
+    for (var key in data) {
+        empty[key] = data[key];
+    }
+    return empty;
 }
 
 function random_color(): string {
