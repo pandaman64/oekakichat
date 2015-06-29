@@ -1,4 +1,5 @@
 ﻿/// <reference path="custom_strokes.ts" />
+/// <reference path="serializer.ts" />
 
 class BaseField {
     mousedown = false;
@@ -7,8 +8,13 @@ class BaseField {
     brush_size = 10;
     sock = new WebSocket("ws://127.0.0.1:8080/ws/chat");
     color = random_color();
+    serializer = new Serializer.Serializer();
 
     constructor(public base_field: HTMLCanvasElement) {
+        this.serializer.register(new Pen("rgb(0,0,0)", 1));
+        this.serializer.register(new Motion<Point>());
+        this.serializer.register(new Stroke(new Pen("rgb(0,0,0)",1)));
+
         this.base_field.onmousedown = ev => {
             //ignore if not left button
             if (ev.button != 0) {
@@ -23,7 +29,8 @@ class BaseField {
                 return;
             }
             this.mousedown = false;
-            this.sock.send(JSON.stringify(flatten(this.working_stroke)));
+            this.sock.send(this.serializer.stringify(this.working_stroke));
+            //this.sock.send(JSON.stringify(flatten(this.working_stroke)));
             //this.draw();
         }
         this.base_field.onmousemove = ev => {
@@ -50,7 +57,10 @@ class BaseField {
         this.sock.onmessage = ev => {
             console.log(ev);
             var stroke_data = <Stroke> JSON.parse(ev.data);
-            var stroke: Stroke = { path: fill_property(new Motion<Point>(),stroke_data.path) , brush: fill_property(new Pen("", 0), stroke_data.brush) };
+            console.log(ev.data);
+            //var stroke: Stroke = { path: fill_property(new Motion<Point>(),stroke_data.path) , brush: fill_property(new Pen("", 0), stroke_data.brush) };
+            var stroke = <Stroke> this.serializer.parse(ev.data);
+            console.log(stroke);
             this.brush_history.push(stroke);
             this.clearField();
             this.draw();

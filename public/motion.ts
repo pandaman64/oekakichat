@@ -1,4 +1,5 @@
 ﻿class Motion<T>{
+    type = "Motion";
     constructor(public values_: T[]= new Array<T>()) {
     }
 
