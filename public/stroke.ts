@@ -1,6 +1,6 @@
-﻿/// <reference path="point.ts">
-/// <reference path="motion.ts">
-/// <reference path="brush.ts">
+﻿/// <reference path="point.ts" />
+/// <reference path="motion.ts" />
+/// <reference path="brush.ts" />
 
 class Stroke {
     public path: Motion<Point>;

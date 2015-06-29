@@ -1,4 +1,4 @@
-﻿/// <reference path="custom_strokes.ts">
+﻿/// <reference path="custom_strokes.ts" />
 
 class BaseField {
     mousedown = false;

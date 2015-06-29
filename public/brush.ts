@@ -1,5 +1,5 @@
-﻿/// <reference path="point.ts">
-/// <reference path="motion.ts">
+﻿/// <reference path="point.ts" />
+/// <reference path="motion.ts" />
 
 class DrawOption {
 }

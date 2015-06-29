@@ -1,7 +1,7 @@
-﻿/// <reference path="point.ts">
-/// <reference path="motion.ts">
-/// <reference path="brush.ts">
-/// <reference path="stroke.ts">
+﻿/// <reference path="point.ts" />
+/// <reference path="motion.ts" />
+/// <reference path="brush.ts" />
+/// <reference path="stroke.ts" />
 
 class Pen implements Brush {
     type = "Pen";
